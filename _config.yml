@@ -1,5 +1,6 @@
 title: Egbert Castro # name of the site
 author: Egbert Castro # name of site's author
+domain: egbertcastro.com
 url: https://www.egbertcastro.com # root address of the site
 baseurl: "" # subpath of the site, e.g. "/blog" (leave it blank "" if you're site shouldn't use a subpath)
 description: > # description of the site (multiple lines allowed)

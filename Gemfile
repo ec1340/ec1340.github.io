@@ -5,5 +5,6 @@ source "https://rubygems.org"
 gem "kramdown-parser-gfm"
 gem "webrick"
 gem "sass-embedded", "~> 1.69.5"
+gem "github-pages", "~> 228", group: :jekyll_plugins
 
 gemspec
