@@ -1,0 +1,37 @@
+# For documentation on this file, see:
+# https://github.com/riggraz/no-style-please#customize-the-menu
+
+entries:
+  - title: info
+    entries:
+      - title: founder building intelligence for biology @ <a href="https://ascentbio.xyz">Ascent Bio</a>
+      - title: about me
+        url: about
+      - title: links
+        entries:
+          - title: github
+            url: https://github.com/ec1340
+          - title: twitter
+            url: https://x.com/egbertcastro
+          - title: linkedin
+            url: https://www.linkedin.com/in/egbertcastro/
+
+
+  - title: all posts
+    post_list:
+      limit: 3
+      show_more: true
+      show_more_text: See more...
+      show_more_url: archive.html
+
+  - title: bio posts
+    post_list:
+      category: bio
+      show_more: true
+      show_more_text: See more posts...
+
+  - title: ml posts
+    post_list:
+      category: ml
+      show_more: true
+      show_more_text: See more posts...
