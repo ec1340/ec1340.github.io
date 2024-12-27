@@ -2,6 +2,7 @@
 
 source "https://rubygems.org"
 
+gem "no-style-please"
 gem "kramdown-parser-gfm"
 gem "webrick"
 gem "sass-embedded", "~> 1.69.5"
