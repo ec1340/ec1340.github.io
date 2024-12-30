@@ -1,6 +1,9 @@
 ---
 layout: post
 category: bio
+url: /2021-03-21-encoding-rna-folding
+title: Encoding RNA Folding Landscapes
+date: 2021-03-21
 ---
 
 

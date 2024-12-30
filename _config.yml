@@ -15,7 +15,7 @@ remote_theme: riggraz/no-style-please # if you are using GitHub Pages, change it
 
 theme_config:
   appearance: "light" # can be "light", "dark" or "auto"
-  back_home_text: ".." # customize text for homepage link in post layout
+  back_home_text: "back to home" # customize text for homepage link in post layout
   date_format: "%Y-%m-%d" # customize how date is formatted
   show_description: false # show blog description in home page
 
@@ -25,7 +25,11 @@ sass:
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
+  - jekyll-last-modified-at
 
+# Optional. The default date format, used if none is specified in the tag.
+last-modified-at:
+    date-format: '%d-%b-%y'
 
 defaults:
   - scope:

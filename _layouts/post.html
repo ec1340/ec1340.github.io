@@ -4,11 +4,18 @@ layout: default
 
 {%-include back_link.html-%}
 
+
+
 <article>
   <p class="post-meta">
-    <time datetime="{{ page.date }}">{{ page.date | date: site.theme_config.date_format }}</time>
+
+    <br> first published on <time datetime="{{ page.date }}" style="color: green;">{{ page.date | date: site.theme_config.date_format }}</time> 
+
+    <!--  -->
+    {%- if page.last_modified_at -%}
+      <br>last updated on <time datetime="{{ page.last_modified_at }}" style="color: green;">{{ page.last_modified_at | date: site.theme_config.date_format }}</time>
+    {%- endif -%}
   </p>
-  
   <h1>{{ page.title }}</h1>
 
   {{ content }}
