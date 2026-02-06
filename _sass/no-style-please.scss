@@ -16,79 +16,484 @@ body[a="dark"] { @include dark-appearance; }
 }
 // -------------------------------------------- //
 
+// LessWrong-inspired color palette
+$bg-color: #fffff8;
+$text-color: #1a1a1a;
+$text-muted: #6b6b6b;
+$text-light: #9a9a9a;
+$link-color: #5f9b65;
+$link-hover: #3d7a42;
+$accent: #5f9b65;
+$border-color: #e8e8e0;
+$code-bg: #f7f7f2;
+$highlight-bg: rgba(95, 155, 101, 0.08);
+
+// Typography
+$font-body: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+$font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$font-mono: 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+
 // bg color is also needed in html in order to
 // block body's background propagation
 // see: https://stackoverflow.com/a/61265706
-html, body { background: white; }
+html, body { background: $bg-color; }
 
-html { height: 100%; }
+html { 
+  height: 100%;
+  scroll-behavior: smooth;
+}
 
 body {
-  color: black;
-  font-family: monospace;
-  font-size: 16px;
-  line-height: 1.4;
+  color: $text-color;
+  font-family: $font-body;
+  font-size: 19px;
+  line-height: 1.75;
   margin: 0;
   min-height: 100%;
   overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1, "liga" 1;
 }
 
-.post-meta { text-align: right; }
+// Links - sophisticated underline style
+a {
+  color: $link-color;
+  text-decoration: none;
+  background-image: linear-gradient(transparent calc(100% - 1px), $link-color 1px);
+  background-size: 0% 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.3s ease, color 0.2s ease;
+  
+  &:hover {
+    color: $link-hover;
+    background-size: 100% 100%;
+  }
+}
 
-h2, h3, h4, h5, h6 { margin-top: 3rem; }
+// Post meta styling
+.post-meta { 
+  color: $text-muted;
+  font-family: $font-heading;
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
+  margin-bottom: 2rem;
+  
+  time {
+    color: $accent;
+    font-weight: 500;
+  }
+}
 
-hr { margin: 2rem 0; }
+// Headings - clean sans-serif like LessWrong
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-heading;
+  font-weight: 600;
+  line-height: 1.35;
+  color: $text-color;
+  letter-spacing: -0.02em;
+}
 
-p { margin: 1rem 0; }
+h1 {
+  font-size: 2.25rem;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
 
-li { margin: 0.4rem 0; }
+h2 {
+  font-size: 1.5rem;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid $border-color;
+}
 
-*:target { background: yellow; }
+h3 {
+  font-size: 1.25rem;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  color: $text-color;
+}
+
+h4, h5, h6 { 
+  margin-top: 2rem;
+  font-size: 1.1rem;
+}
+
+hr { 
+  margin: 3.5rem auto;
+  border: none;
+  width: 30%;
+  text-align: center;
+  
+  &:before {
+    content: '· · ·';
+    color: $text-light;
+    letter-spacing: 0.5em;
+  }
+  
+  &:after { content: none; }
+}
+
+p { 
+  margin: 1.5rem 0;
+  hanging-punctuation: first last;
+}
+
+// First paragraph after heading - slightly larger
+h1 + p, h2 + p {
+  font-size: 1.05em;
+}
+
+// Lists
+ul, ol {
+  padding-left: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+li { 
+  margin: 0.6rem 0;
+  padding-left: 0.25rem;
+}
+
+ul li::marker {
+  color: $accent;
+}
+
+ol li::marker {
+  color: $accent;
+  font-weight: 500;
+}
+
+// Nested lists
+ul ul, ol ol, ul ol, ol ul {
+  margin: 0.5rem 0;
+}
+
+*:target { 
+  background: $highlight-bg;
+  padding: 0.25rem;
+  border-radius: 3px;
+}
 
 .w {
-  max-width: 640px;
+  max-width: 700px;
   margin: 0 auto;
   padding: 4rem 2rem;
 }
 
-hr {
-  text-align: center;
-  border: 0;
-
-  &:before { content: '/////' }
-  &:after { content: attr(data-content) '/////' }
+// Tables
+table { 
+  width: 100%;
+  margin: 2rem 0;
+  font-size: 0.95rem;
 }
-
-table { width: 100%; }
 
 table, th, td {
-  border: thin solid black;
+  border: 1px solid $border-color;
   border-collapse: collapse;
-  padding: 0.4rem;
+  padding: 0.75rem 1rem;
 }
 
+th {
+  font-family: $font-heading;
+  font-weight: 500;
+  background: $code-bg;
+  text-align: left;
+}
+
+tr:hover {
+  background: $highlight-bg;
+}
+
+// Code styling
 code {
-  color: white;
-  background: black;
+  font-family: $font-mono;
+  font-size: 0.85em;
+  color: $text-color;
+  background: $code-bg;
+  padding: 0.2em 0.45em;
+  border-radius: 4px;
+  border: 1px solid $border-color;
 }
 
-div.highlighter-rouge code {
-  display: block;
-  overflow-x: auto;
-  white-space: pre-wrap;
-  padding: 1rem;
+div.highlighter-rouge {
+  margin: 2rem 0;
+  
+  code {
+    display: block;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    padding: 1.25rem 1.5rem;
+    border-radius: 6px;
+    border: 1px solid $border-color;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
 }
 
+// Blockquotes - elegant left border
 blockquote {
   font-style: italic;
-  border: thin solid black;
-  padding: 1rem;
+  border: none;
+  border-left: 3px solid $accent;
+  padding: 0.75rem 0 0.75rem 1.75rem;
+  margin: 2rem 0;
+  color: $text-muted;
+  background: linear-gradient(to right, $highlight-bg, transparent 50%);
 
-  p { margin: 0; }
+  p { 
+    margin: 0.75rem 0;
+  }
+  
+  p:first-child { margin-top: 0; }
+  p:last-child { margin-bottom: 0; }
+  
+  cite, footer {
+    display: block;
+    margin-top: 0.75rem;
+    font-style: normal;
+    font-size: 0.9rem;
+    color: $text-light;
+    
+    &:before {
+      content: '— ';
+    }
+  }
 }
 
+// Images
 img {
   max-width: 100%;
   display: block;
-  margin: 0 auto;
+  margin: 2rem auto;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+// Figure with caption
+figure {
+  margin: 2.5rem 0;
+  
+  img {
+    margin-bottom: 0.75rem;
+  }
+  
+  figcaption {
+    text-align: center;
+    font-family: $font-heading;
+    font-size: 0.875rem;
+    color: $text-muted;
+    font-style: italic;
+  }
+}
+
+// Strong and emphasis
+strong {
+  font-weight: 600;
+  color: $text-color;
+}
+
+em {
+  font-style: italic;
+}
+
+// Article styling
+article {
+  h1 {
+    margin-bottom: 0.5rem;
+  }
+}
+
+// Footnotes
+.footnotes {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid $border-color;
+  font-size: 0.9rem;
+  color: $text-muted;
+  
+  ol {
+    padding-left: 1.25rem;
+  }
+  
+  li {
+    margin: 1rem 0;
+  }
+  
+  p {
+    margin: 0.5rem 0;
+  }
+}
+
+sup {
+  font-size: 0.75em;
+  
+  a {
+    background: none;
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+    
+    &:hover {
+      background: $highlight-bg;
+    }
+  }
+}
+
+// Selection color
+::selection {
+  background: rgba(95, 155, 101, 0.25);
+}
+
+// Site header
+header {
+  margin-bottom: 2rem;
+  
+  h1 {
+    font-family: $font-heading;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0;
+    color: $text-color;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+
+// Navigation menu - clean LessWrong style
+header + ul {
+  font-family: $font-heading;
+  font-size: 0.9rem;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 3rem 0;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid $border-color;
+  
+  > li {
+    margin: 1.5rem 0;
+    font-weight: 500;
+    color: $text-color;
+    text-transform: lowercase;
+    letter-spacing: 0.02em;
+    
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+  
+  // Nested lists
+  ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0.75rem 0 0 0;
+    
+    li {
+      margin: 0.5rem 0;
+      font-weight: 400;
+      color: $text-muted;
+      text-transform: none;
+      padding-left: 1rem;
+      border-left: 2px solid transparent;
+      transition: border-color 0.2s ease;
+      
+      &:hover {
+        border-left-color: $accent;
+      }
+      
+      a {
+        background: none;
+        
+        &:hover {
+          color: $link-hover;
+        }
+      }
+    }
+    
+    // Third level
+    ul {
+      margin-left: 0;
+      margin-top: 0.5rem;
+      
+      li {
+        margin: 0.35rem 0;
+        padding-left: 1rem;
+        font-size: 0.95em;
+      }
+    }
+  }
+}
+
+// Post list styling
+ul li time {
+  font-family: $font-mono;
+  font-size: 0.75rem;
+  color: $text-light;
+  margin-left: 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+// Back link styling
+a[href*="back"], .back-link {
+  font-family: $font-heading;
+  font-size: 0.875rem;
+  color: $text-muted;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 2rem;
+  background: none;
+  
+  &:before {
+    content: '←';
+  }
+  
+  &:hover {
+    color: $link-hover;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 600px) {
+  body {
+    font-size: 17px;
+  }
+  
+  .w {
+    padding: 2rem 1.25rem;
+  }
+  
+  h1 {
+    font-size: 1.75rem;
+  }
+  
+  h2 {
+    font-size: 1.35rem;
+  }
+}
+
+// Print styles
+@media print {
+  body {
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+  
+  .w {
+    max-width: 100%;
+    padding: 0;
+  }
+  
+  a {
+    color: $text-color;
+    text-decoration: underline;
+  }
+  
+  h2 {
+    border-bottom: none;
+  }
 }
