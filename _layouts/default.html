@@ -15,6 +15,22 @@
       {%-include goat_counter.html-%}
     {%-endif-%}
 
+    {% if page.math %}
+      <script>
+        window.MathJax = {
+          tex: {
+            inlineMath: [["$", "$"], ["\\(", "\\)"]],
+            displayMath: [["$$", "$$"], ["\\[", "\\]"]],
+            processEscapes: true
+          },
+          options: {
+            skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+          }
+        };
+      </script>
+      <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    {% endif %}
+
     {% if page.custom_js %}
       {% for js_file in page.custom_js %}
         <script type="text/javascript" src="{{ site.baseurl }}/assets/js/{{ js_file }}.js"></script>

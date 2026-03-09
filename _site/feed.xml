@@ -1,5 +1,148 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2026-02-05T21:03:15-08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Egbert Castro</title><subtitle>Reasoning over interesting bio
-</subtitle><author><name>Egbert Castro</name></author><entry><title type="html">Agentic Science</title><link href="http://localhost:4000/agentic-science.html" rel="alternate" type="text/html" title="Agentic Science" /><published>2026-02-05T00:00:00-08:00</published><updated>2026-02-05T21:03:14-08:00</updated><id>http://localhost:4000/agentic-science</id><content type="html" xml:base="http://localhost:4000/agentic-science.html">&lt;p&gt;At the end of 2026, what will scientific research look like?&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2026-03-09T07:22:08-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Egbert Castro</title><subtitle>Reasoning over interesting bio
+</subtitle><author><name>Egbert Castro</name></author><entry><title type="html">Molecule Reasoning Models</title><link href="http://localhost:4000/molecule-reasoning-models.html" rel="alternate" type="text/html" title="Molecule Reasoning Models" /><published>2026-03-08T00:00:00-08:00</published><updated>2026-03-09T07:22:07-07:00</updated><id>http://localhost:4000/molecule-reasoning-models</id><content type="html" xml:base="http://localhost:4000/molecule-reasoning-models.html">&lt;p&gt;I’ve been thinking a lot about molecule design lately, and in particular about whether LLMs could ever get genuinely good at reasoning through it. A paper that is a great example of current approaches and a nice starting point is &lt;a href=&quot;https://github.com/Future-House/ether0&quot;&gt;Ether0&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;In this post, I’ll be walking through how &lt;a href=&quot;https://github.com/Future-House/ether0&quot;&gt;Ether0&lt;/a&gt; used post-training techniques like SFT and GRPO to instill molecule reasoning into base LLMs. I’ll also dig into a few key ideas in the training setup.&lt;/p&gt;
+
+&lt;p&gt;There’s been a lot of interest in the AI for science field around specialized reasoning models with most showing very early progress. They often still fail in many obvious ways and I think the Ether0 paper is a useful place to ask what the path to get to a strong model might look like.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-this-post-covers&quot;&gt;What this post covers&lt;/h2&gt;
+
+&lt;p&gt;This is a walkthrough of the Ether0 paper, looking at how they assembled their datasets and trained an open source model to achieve a big performance jump on a variety of chemistry tasks. I’ll mainly be focusing on the way the model was trained so let’s start with a quick overview of the stages of training an LLM.&lt;/p&gt;
+
+&lt;h3 id=&quot;stages-of-training-an-llm&quot;&gt;Stages of Training an LLM&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Pre-training&lt;/strong&gt;:
+Their training methods fit after the &lt;strong&gt;pre-training&lt;/strong&gt; stage of the base model. During pre-training, the model is exposed to an enormous amount of data and learns to pick up on general patterns and relationships in the data.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Post-training&lt;/strong&gt;: Uses more tailored data to adjust the model’s abilities towards a specific type of behavior. Often this is to elicit reasoning behavior but can also include things like alignment and instruction-following.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;ether0-training-pipeline&quot;&gt;Ether0 Training Pipeline&lt;/h2&gt;
+
+&lt;h3 id=&quot;ether0-training-data-construction&quot;&gt;Ether0 Training Data Construction&lt;/h3&gt;
+
+&lt;p&gt;In Ether0, ~640,000 chemical reasoning problems across 18 tasks were generated using real-world molecules. The authors pulled in data from ChEMBL, COCONUT, Pubchem, AqSolDB, and other sources as a source of ground truth molecule : molecule label samples. From these sources, they generated verifiable tasks like solubility prediction, IUPAC → SMILES conversion and pka prediction. The thinking is that these tasks, while generally small in scope, form important primitives that a powerful molecule reasoning model would require.&lt;/p&gt;
+
+&lt;h3 id=&quot;four-step-training&quot;&gt;Four-Step Training&lt;/h3&gt;
+
+&lt;p&gt;The authors use a 4 step post-training process. In recent post-training setups, multiple phases of learning appear to complement one another and help the model better learn capabilities. For example, SFT helps models form reasoning sequences whereas RL shapes the reasoning ability of the model toward higher quality, more efficient paths that result in correct answers.&lt;/p&gt;
+
+&lt;h4 id=&quot;step-1-supervised-fine-tuning-sft-on-chain-of-thought-cot-data&quot;&gt;Step 1: Supervised Fine-tuning (SFT) on Chain of Thought (CoT) data&lt;/h4&gt;
+
+&lt;p&gt;The authors begin with a SFT step to provide a strong initial grounding in the task domain. To form the bank of reasoning traces, they use DeepSeek R1 on a subset of the Ether0 data and collect the CoT data. Its worth noting that while the DeepSeek model fails to reach correct answer in the vast majority of cases &lt;strong&gt;(&amp;lt;1% success rate)&lt;/strong&gt;, these traces are still considered useful for learning reasoning as they provide examples of structured reasoning sequences.&lt;/p&gt;
+
+&lt;p&gt;After training, the performance on the multiple choice section (MCQA) of the Ether0 benchmark jumps from 0 to 50% at the end of the SFT stage. More moderate (1%-20%) improvements are made on other molecule tasks.&lt;/p&gt;
+
+&lt;p&gt;From the objective function, the model learns to maximize probability along observed reasoning token sequences and implicitly push the model towards generating CoT in its responses. However at this stage, the model has learned to mimic reasoning sequences rather than internalize reasoning capabilities.&lt;/p&gt;
+
+&lt;p&gt;We can see this in the SFT objective function. If $x$ is the problem prompt and $r = (r_1, \dots, r_T)$ is a reasoning trace, the SFT stage minimizes the negative log-likelihood:&lt;/p&gt;
+
+\[\mathcal{L}_{\mathrm{SFT}}(\theta)
+= - \sum_{(x,r)} \sum_{t=1}^{T} \log \pi_\theta(r_t \mid x, r_{&amp;lt;t}).\]
+
+&lt;h4 id=&quot;step-2-specialist-rl&quot;&gt;Step 2: Specialist RL&lt;/h4&gt;
+
+&lt;p&gt;As the tasks vary fairly widely in difficulty and type, the authors distribute the 18 tasks across 7 RL runs. All MCQA categories are combined into a single run. To train each specialist model, they use group relative policy optimization (GRPO). Since it’s becoming such a popular technique in this flavor of approaches (Ether0, &lt;a href=&quot;https://arxiv.org/abs/2510.16880&quot;&gt;Chem-R&lt;/a&gt;, &lt;a href=&quot;https://biomni.stanford.edu/blog/biomni-r0-technical-report/&quot;&gt;Biomni-R0&lt;/a&gt;), its worth spending a little while discussing GRPO&lt;/p&gt;
+
+&lt;h5 id=&quot;group-relative-policy-optimization-grpo&quot;&gt;Group Relative Policy Optimization (GRPO)&lt;/h5&gt;
+
+&lt;p&gt;RL is about optimizing a policy to maximize the expected reward. Within RL, there are policy gradient methods which optimize the parameters of a policy using signal from a reward. This is generally done through an advantage estimate (how much better an action is from a reward perspective relative to a baseline), which helps in reducing variance and speeding up learning.&lt;/p&gt;
+
+&lt;p&gt;GRPO fits into the policy-gradient methods class of RL algorithms and is relatively simple to use as it only uses 1) multiple outputs from a policy (LLM), 2) works well with verifiable or rule-based and deterministic rewards (often just a python function) and 3) token-level probabilities for the PPO ratio calculation and optional KL-divergence term.&lt;/p&gt;
+
+&lt;h5 id=&quot;grpo-objective&quot;&gt;GRPO Objective&lt;/h5&gt;
+
+&lt;p&gt;Looking at the GRPO objective, there a few terms worth diving deeper into:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;KL divergence&lt;/strong&gt;: keeps the updated policy similar to the base policy such that the starting action space remains viable.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;PPO likelihood ratio&lt;/strong&gt;: between the new policy and the old policy (from the last iteration). Intuitively, this weights the reward signal by the strength of the policy change. This helps in sharpening the probability distribution around high-reward sequences while maintaining smaller policy updates.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For a sampled completion $y_i$, the relative weighting comes from the PPO ratio&lt;/p&gt;
+
+\[\rho_{i,t}(\theta)
+= \frac{
+\pi_\theta(y_{i,t} \mid x, y_{i,&amp;lt;t})
+}{
+\pi_{\theta_{\mathrm{old}}}(y_{i,t} \mid x, y_{i,&amp;lt;t})
+}.\]
+
+&lt;p&gt;GRPO then uses group-normalized rewards. If we sample $G$ outputs for the same prompt and get rewards $r_1, \dots, r_G$, a typical group-relative advantage is&lt;/p&gt;
+
+\[A_i
+= \frac{r_i - \mathrm{mean}(r_1,\dots,r_G)}
+{\mathrm{std}(r_1,\dots,r_G) + \varepsilon}.\]
+
+&lt;p&gt;So the update depends on how much better one sampled reasoning trace is than the other samples for the same task, not just on its absolute reward.&lt;/p&gt;
+
+&lt;p&gt;Notably, the KL divergence term tie the learned policy &lt;a href=&quot;https://arxiv.org/abs/2504.13837&quot;&gt;within some soft divergence bounds&lt;/a&gt; around the initial policy, with update steps weighted by the PPO-likelihood ratio (+clipping) ensuring gradual changes. Since we’re using a pre-trained LLM as a policy, there is an already baked in prior distribution over token space that is dependent on the pre-training setup used for the base model. Each base model learns a slightly different prior over world data.&lt;/p&gt;
+
+&lt;p&gt;How much this prior of differs between models is an open question but I’d hypothesize that the differences in the learned priors are amplified in smaller data domains like chemistry. Its very possible that chemistry data makes up a very small fraction of the training corpus of large base model with molecule data being an even smaller, miniscule fraction. As a result, differences in composition and size of this type of data in each model’s pre-training corpus can lead to differences in the learned prior around things like molecule quality and the relationship between structure and chemical property.&lt;/p&gt;
+
+&lt;p&gt;With this in mind, recall that the KL divergence term keeps the learned policy similar to the reference policy. Specifically, the KL term as written in the GRPO objective contributes a high penalty if probability mass is moved away from areas it previously covered. In other words, if the reference model considers a molecule to be likely, the learned policy will be biased to continue to see that molecule as likely.&lt;/p&gt;
+
+&lt;p&gt;So in the (very often observed) case that the initial base model doesn’t understand chemistry, a misaligned prior might actually leak into the post-training process and introduce a subtle tension in the learning process. The model may receive conflicting gradient signals when encounter molecules the base model hallucinates as being valid but the RL objective actually deems as invalid. This might point to the importance of the initial SFT stage or maybe a greater emphasis on things like &lt;a href=&quot;https://vintagedata.org/blog/posts/what-is-mid-training&quot;&gt;mid-training&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;At the level of the objective function, there are possible remedies. The &lt;a href=&quot;https://arxiv.org/abs/2503.14476&quot;&gt;DAPO&lt;/a&gt; objective function removes the KL divergence term and adjusts the clipping range. The asymmetric clipping they use is motivated by the entropy collapse problem for token probabilities, where high-probability tokens get upweighted and low probability tokens vanish over time. Raising the top clip value gives low probability tokens a chance at larger gradient updates.&lt;/p&gt;
+
+&lt;p&gt;In Ether0, they address the molecule quality issue by introducing a molecule quality bonus reward during the final GRPO step. This brings us to the reward system in GRPO setups!&lt;/p&gt;
+
+&lt;h5 id=&quot;rule-based-deterministic-rewards&quot;&gt;Rule-based, Deterministic Rewards&lt;/h5&gt;
+
+&lt;p&gt;Many recent RL training pipelines use rule-based rewards instead of learned reward models. The combined simplicity and effectiveness of these rewards across different task domains have made them very popular in LLM-based RL.&lt;/p&gt;
+
+&lt;p&gt;In the DeepSeek R1 paper and Ether0 paper, the reward appears as&lt;/p&gt;
+
+\[r(y) = r_{\mathrm{format}}(y) + r_{\mathrm{acc}}(y).\]
+
+&lt;p&gt;The formatting reward checks for &lt;thought&gt; and &lt;answer&gt; tagged sections which trains the model to separate the reasoning and answer components of the response. The accuracy reward checks for the correct answer token and is where domain specific reward functions are introduced. In Ether0, these accuracy rewards check for a correct solution to the chemical reasoning task.&lt;/answer&gt;&lt;/thought&gt;&lt;/p&gt;
+
+&lt;p&gt;For the final GRPO stage in Ether0, they add a molecule quality bonus reward to the accuracy reward.&lt;/p&gt;
+
+\[r(y) = r_{\mathrm{format}}(y) + r_{\mathrm{acc}}(y) + \lambda \, q(y),\]
+
+&lt;p&gt;where $q(\cdot)$ is a molecule-quality score.&lt;/p&gt;
+
+&lt;p&gt;Andrew White has a really interesting &lt;a href=&quot;https://diffuse.one/p/m1-000&quot;&gt;blog post&lt;/a&gt; that dives into the development of chemistry reward functions. It’s a great read and I highly recommend checking it out.&lt;/p&gt;
+
+&lt;p&gt;He mentions trying out domain-specific models (GNNs, classifiers) during the development process of Ether0. I wonder if future post-training pipelines will make greater use of these.&lt;/p&gt;
+
+&lt;h5 id=&quot;addressing-problematic-tasks-using-an-advantage-based-curriculum&quot;&gt;Addressing problematic tasks using an advantage-based curriculum&lt;/h5&gt;
+
+&lt;p&gt;From the advantage estimate formula, you might be wondering what happens if all outputs receive the same reward. In Ether0 development process, the authors mention that this is especially an issue. This can be the case is the task is either very difficult or very trivial. In these cases, the advantage would be 0 for the group and the contribution to the gradient would be dropped. This leads to inefficient training with lower effective batch sizes with prompts that contribute almost no gradient.&lt;/p&gt;
+
+&lt;p&gt;You can see this directly from the group-relative advantage above: if $r_1 = \dots = r_G$, then $A_i \approx 0$ for every sample in the group, so that prompt contributes almost no learning signal.&lt;/p&gt;
+
+&lt;p&gt;To address this, they use a dynamic advantage-based curriculum which maintains a buffer of non-trivial tasks. At each training iteration, the sample from this buffer to ensure each batch maintains a decently strong loss signal.&lt;/p&gt;
+
+&lt;h4 id=&quot;step-3-generalist-distillation&quot;&gt;Step 3: Generalist Distillation&lt;/h4&gt;
+
+&lt;p&gt;The last two phases are very similar to the first two so I won’t spend that much time on them.&lt;/p&gt;
+
+&lt;p&gt;At the end of phase 2, we are left with 7 SFT + GRPO-trained models which have gained greater reasoning ability for a class of chemistry tasks.  The authors distill the specialist model using SFT on a base model. They collect reasoning traces from the specialized models and using a combination of LLM-as-a-Judge and regex filtering, assemble a refined set of traces.&lt;/p&gt;
+
+&lt;h4 id=&quot;step-4-generalist-rl&quot;&gt;Step 4: Generalist RL&lt;/h4&gt;
+
+&lt;p&gt;For the final post-training phase, the authors train the model using GRPO across all task categories. They use the advantage-based curriculum again. As mentioned above, this phase of GRPO includes a molecule quality bonus in it’s reward function.&lt;/p&gt;
+
+&lt;h2 id=&quot;a-molecule-reasoning-model-in-a-land-of-agents&quot;&gt;A Molecule Reasoning Model in a Land of Agents&lt;/h2&gt;
+
+&lt;p&gt;With agentic scientists, its possible to solve many of small molecule tasks  with a well designed agentic harness. Access to cheminformatics tools and databases bestows the base LLM with a much greater ability to validate molecules during it’s step by step reasoning process. This has led to agents that can work with chemical data quite well, especially when working within a code sandbox.&lt;/p&gt;
+
+&lt;p&gt;While agentic harnesses confer immediate gains in problem solving capabilities, enduring gains in molecule problem solving might actually come from better molecule reasoning base models. The reason for this ties to a fundamental challenge in the molecule design domain and many other scientific disciplines - &lt;em&gt;search.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;For tasks concerning molecules, a core challenge is searching through an enormous design space, with many constraints and multi-scale interactions. With an agentic system, the search process feels very familiar. Agents iteratively loop through reasoning steps and tool calls to generate and check molecule designs. But efficiently navigating through this highly-complex search space can perhaps be done in a better way if the underlying search model possess a level of a deep generalizable knowledge of molecules. With enough inference-time compute, molecule reasoning models may generate novel, high-quality molecules with chemically grounded rationale.&lt;/p&gt;
+
+&lt;hr /&gt;</content><author><name>Egbert Castro</name></author><category term="ml" /><summary type="html">I’ve been thinking a lot about molecule design lately, and in particular about whether LLMs could ever get genuinely good at reasoning through it. A paper that is a great example of current approaches and a nice starting point is Ether0.</summary></entry><entry><title type="html">Agentic Science</title><link href="http://localhost:4000/agentic-science.html" rel="alternate" type="text/html" title="Agentic Science" /><published>2026-02-05T00:00:00-08:00</published><updated>2026-02-05T21:31:20-08:00</updated><id>http://localhost:4000/agentic-science</id><content type="html" xml:base="http://localhost:4000/agentic-science.html">&lt;p&gt;At the end of 2026, what will scientific research look like?&lt;/p&gt;
 
 &lt;p&gt;I find myself thinking about this question more and more. There seems to be a steady stream of announcements for new foundation models for biology or a better AI scientist platform, each promising to improve the current status quo of scientific research. On the data side, there is an effort by biotech companies to publish open-access &lt;a href=&quot;https://huggingface.co/datasets/tahoebio/Tahoe-100M&quot;&gt;large-scale&lt;/a&gt; &lt;a href=&quot;https://www.omtx.ai/&quot;&gt;datasets&lt;/a&gt;, which the field desparately needs . Outside of the life sciences, developers have created sophisticated ways to multiplex &lt;a href=&quot;https://simonwillison.net/2025/Oct/5/parallel-coding-agents/&quot;&gt;agent sessions&lt;/a&gt;  leading to bolder, autonomously-completed &lt;a href=&quot;https://www.anthropic.com/engineering/building-c-compiler&quot;&gt;software projects&lt;/a&gt;. Lastly, the next AGI-adjacent foundation model seems to always be only a few months away.*&lt;/p&gt;
 
@@ -9,7 +152,7 @@
 
 &lt;p&gt;But what does this &lt;em&gt;exploration&lt;/em&gt; phase look today?&lt;/p&gt;
 
-&lt;p&gt;Agents introduce a new approach to science work. In the interactive setting, they serve as powerful tool capable of accelerating key steps. An early signal of this was in literature search, where &lt;a href=&quot;https://en.wikipedia.org/wiki/Retrieval-augmented_generation&quot;&gt;RAG&lt;/a&gt; + LLM was incredibly effective for searching over documents. Improved tool use capabilities in the base foundation model extended the action space for science agents, giving them effectively full access to the scientific toolbox. The most powerful tool for agents however is the &lt;em&gt;code sandbox&lt;/em&gt;. It’s clear now that the best performing agents operate within the coding domain, where the versatility of code is key.&lt;/p&gt;
+&lt;p&gt;Agents introduce a new approach to science work. In the interactive setting, they serve as powerful tool capable of accelerating key steps. An early signal of this was in literature search, where &lt;a href=&quot;https://en.wikipedia.org/wiki/Retrieval-augmented_generation&quot;&gt;RAG&lt;/a&gt; + LLM was incredibly effective for searching over documents. Improved tool use capabilities in the base foundation model extended the action space for science agents, giving them effectively full access to the scientific toolbox. The most powerful tool for agents however is the &lt;em&gt;code interpreter&lt;/em&gt;, where the &lt;a href=&quot;https://evjang.com/2026/02/04/rocks.html&quot;&gt;unconstrained search space&lt;/a&gt; of code allows for deep exploration and testing. It’s clear now that the best performing agents operate within the coding domain, fully leveraging its versatility.&lt;/p&gt;
 
 &lt;p&gt;I won’t discuss autonomous science agents here [topic for a future post] but there is an growing body of &lt;a href=&quot;https://arxiv.org/abs/2408.06292&quot;&gt;evidence&lt;/a&gt; that science agents can excel at longer, publication-scope tasks. It’s a exciting thought exercise to map out the implications of fully-automated hypothesis generation and testing.&lt;/p&gt;
 
