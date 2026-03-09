@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2026-03-09T07:22:08-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Egbert Castro</title><subtitle>Reasoning over interesting bio
-</subtitle><author><name>Egbert Castro</name></author><entry><title type="html">Molecule Reasoning Models</title><link href="http://localhost:4000/molecule-reasoning-models.html" rel="alternate" type="text/html" title="Molecule Reasoning Models" /><published>2026-03-08T00:00:00-08:00</published><updated>2026-03-09T07:22:07-07:00</updated><id>http://localhost:4000/molecule-reasoning-models</id><content type="html" xml:base="http://localhost:4000/molecule-reasoning-models.html">&lt;p&gt;I’ve been thinking a lot about molecule design lately, and in particular about whether LLMs could ever get genuinely good at reasoning through it. A paper that is a great example of current approaches and a nice starting point is &lt;a href=&quot;https://github.com/Future-House/ether0&quot;&gt;Ether0&lt;/a&gt;.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2026-03-09T07:34:07-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Egbert Castro</title><subtitle>Reasoning over interesting bio
+</subtitle><author><name>Egbert Castro</name></author><entry><title type="html">Molecule Reasoning Models</title><link href="http://localhost:4000/molecule-reasoning-models.html" rel="alternate" type="text/html" title="Molecule Reasoning Models" /><published>2026-03-08T00:00:00-08:00</published><updated>2026-03-09T07:23:06-07:00</updated><id>http://localhost:4000/molecule-reasoning-models</id><content type="html" xml:base="http://localhost:4000/molecule-reasoning-models.html">&lt;p&gt;I’ve been thinking a lot about molecule design lately, and in particular about whether LLMs could ever get genuinely good at reasoning through it. A paper that is a great example of current approaches and a nice starting point is &lt;a href=&quot;https://github.com/Future-House/ether0&quot;&gt;Ether0&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;In this post, I’ll be walking through how &lt;a href=&quot;https://github.com/Future-House/ether0&quot;&gt;Ether0&lt;/a&gt; used post-training techniques like SFT and GRPO to instill molecule reasoning into base LLMs. I’ll also dig into a few key ideas in the training setup.&lt;/p&gt;
 
@@ -39,10 +39,15 @@ Their training methods fit after the &lt;strong&gt;pre-training&lt;/strong&gt; s
 
 &lt;p&gt;From the objective function, the model learns to maximize probability along observed reasoning token sequences and implicitly push the model towards generating CoT in its responses. However at this stage, the model has learned to mimic reasoning sequences rather than internalize reasoning capabilities.&lt;/p&gt;
 
-&lt;p&gt;We can see this in the SFT objective function. If $x$ is the problem prompt and $r = (r_1, \dots, r_T)$ is a reasoning trace, the SFT stage minimizes the negative log-likelihood:&lt;/p&gt;
+&lt;p&gt;Given a set of demonstration sequences Ddemo, supervised fine-tuning (SFT) minimizes the crossentropy loss over the dataset:&lt;/p&gt;
 
-\[\mathcal{L}_{\mathrm{SFT}}(\theta)
-= - \sum_{(x,r)} \sum_{t=1}^{T} \log \pi_\theta(r_t \mid x, r_{&amp;lt;t}).\]
+&lt;p&gt;We can see this in the SFT objective function. If $D_{\mathrm{demo}}$ is the set of demonstration sequences and $s$ is a sequence, the SFT stage minimizes the negative log-likelihood:&lt;/p&gt;
+
+\[L_{\mathrm{SFT}}
+= -\frac{1}{|D_{\mathrm{demo}}|}
+\sum_{s \in D_{\mathrm{demo}}}
+\sum_{t=1}^{|s|}
+\log \pi(s_t \mid s_{&amp;lt;t}).\]
 
 &lt;h4 id=&quot;step-2-specialist-rl&quot;&gt;Step 2: Specialist RL&lt;/h4&gt;
 
@@ -56,7 +61,23 @@ Their training methods fit after the &lt;strong&gt;pre-training&lt;/strong&gt; s
 
 &lt;h5 id=&quot;grpo-objective&quot;&gt;GRPO Objective&lt;/h5&gt;
 
-&lt;p&gt;Looking at the GRPO objective, there a few terms worth diving deeper into:&lt;/p&gt;
+&lt;p&gt;Looking at the GRPO objective, there a few terms worth diving deeper into.&lt;/p&gt;
+
+&lt;p&gt;Given a single problem $x$ and a group of completions ${y_i}$, the per-group objective is:&lt;/p&gt;
+
+\[J(\theta, x, y_1, \ldots, y_G)
+= \sum_{i=1}^{G} \frac{1}{|y_i|} \sum_{t=1}^{|y_i|}
+\left(
+\operatorname{clip}\!\left(
+\frac{\pi_\theta(y_{i,t} \mid x, y_{i,&amp;lt;t})}{
+\pi_{\theta_{\mathrm{old}}}(y_{i,t} \mid x, y_{i,&amp;lt;t})
+},
+A_i, \epsilon
+\right)
+- \beta \hat{D}_{\mathrm{KL}}[\pi_\theta \| \pi_{\mathrm{ref}}; x, y_{i,\le t}]
+\right).\]
+
+&lt;p&gt;The current policy is $\pi_\theta$ and previous iteration’s policy is $\pi_{\theta_{\mathrm{ref}}}$. The starting policy is $\pi_{\theta_{\mathrm{ref}}}$.&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;
@@ -84,9 +105,9 @@ Their training methods fit after the &lt;strong&gt;pre-training&lt;/strong&gt; s
 
 &lt;p&gt;So the update depends on how much better one sampled reasoning trace is than the other samples for the same task, not just on its absolute reward.&lt;/p&gt;
 
-&lt;p&gt;Notably, the KL divergence term tie the learned policy &lt;a href=&quot;https://arxiv.org/abs/2504.13837&quot;&gt;within some soft divergence bounds&lt;/a&gt; around the initial policy, with update steps weighted by the PPO-likelihood ratio (+clipping) ensuring gradual changes. Since we’re using a pre-trained LLM as a policy, there is an already baked in prior distribution over token space that is dependent on the pre-training setup used for the base model. Each base model learns a slightly different prior over world data.&lt;/p&gt;
+&lt;p&gt;Notably, the KL divergence term tie the learned policy &lt;a href=&quot;https://arxiv.org/abs/2504.13837&quot;&gt;within some soft divergence bounds&lt;/a&gt; around the initial policy $\pi_{\theta_{\mathrm{ref}}}$, with update steps weighted by the PPO-likelihood ratio (+clipping) ensuring gradual changes. Since we’re using a pre-trained LLM as a policy, there is an already baked in prior distribution over token space that is dependent on the pre-training setup used for the base model. Each base model learns a slightly different prior over world data.&lt;/p&gt;
 
-&lt;p&gt;How much this prior of differs between models is an open question but I’d hypothesize that the differences in the learned priors are amplified in smaller data domains like chemistry. Its very possible that chemistry data makes up a very small fraction of the training corpus of large base model with molecule data being an even smaller, miniscule fraction. As a result, differences in composition and size of this type of data in each model’s pre-training corpus can lead to differences in the learned prior around things like molecule quality and the relationship between structure and chemical property.&lt;/p&gt;
+&lt;p&gt;How much this prior $\pi_{\theta_{\mathrm{ref}}}$  of differs between models is an open question but I’d hypothesize that the differences in the learned priors are amplified in smaller data domains like chemistry. Its very possible that chemistry data makes up a very small fraction of the training corpus of large base model with molecule data being an even smaller, miniscule fraction. As a result, differences in composition and size of this type of data in each model’s pre-training corpus can lead to differences in the learned prior around things like molecule quality and the relationship between structure and chemical property.&lt;/p&gt;
 
 &lt;p&gt;With this in mind, recall that the KL divergence term keeps the learned policy similar to the reference policy. Specifically, the KL term as written in the GRPO objective contributes a high penalty if probability mass is moved away from areas it previously covered. In other words, if the reference model considers a molecule to be likely, the learned policy will be biased to continue to see that molecule as likely.&lt;/p&gt;
 
@@ -112,9 +133,7 @@ Their training methods fit after the &lt;strong&gt;pre-training&lt;/strong&gt; s
 
 &lt;p&gt;where $q(\cdot)$ is a molecule-quality score.&lt;/p&gt;
 
-&lt;p&gt;Andrew White has a really interesting &lt;a href=&quot;https://diffuse.one/p/m1-000&quot;&gt;blog post&lt;/a&gt; that dives into the development of chemistry reward functions. It’s a great read and I highly recommend checking it out.&lt;/p&gt;
-
-&lt;p&gt;He mentions trying out domain-specific models (GNNs, classifiers) during the development process of Ether0. I wonder if future post-training pipelines will make greater use of these.&lt;/p&gt;
+&lt;p&gt;Andrew White has a really interesting &lt;a href=&quot;https://diffuse.one/p/m1-000&quot;&gt;blog post&lt;/a&gt; that dives into the development of chemistry reward functions. It’s a great read and I highly recommend checking it out. He mentions trying out domain-specific models (GNNs, classifiers) during the development process of Ether0. I wonder if future post-training pipelines will make greater use of these.&lt;/p&gt;
 
 &lt;h5 id=&quot;addressing-problematic-tasks-using-an-advantage-based-curriculum&quot;&gt;Addressing problematic tasks using an advantage-based curriculum&lt;/h5&gt;
 

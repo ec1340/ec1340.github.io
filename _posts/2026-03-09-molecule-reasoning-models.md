@@ -47,11 +47,16 @@ After training, the performance on the multiple choice section (MCQA) of the Eth
 From the objective function, the model learns to maximize probability along observed reasoning token sequences and implicitly push the model towards generating CoT in its responses. However at this stage, the model has learned to mimic reasoning sequences rather than internalize reasoning capabilities.
 
 
-We can see this in the SFT objective function. If $x$ is the problem prompt and $r = (r_1, \dots, r_T)$ is a reasoning trace, the SFT stage minimizes the negative log-likelihood:
+Given a set of demonstration sequences Ddemo, supervised fine-tuning (SFT) minimizes the crossentropy loss over the dataset:
+
+We can see this in the SFT objective function. If $D_{\mathrm{demo}}$ is the set of demonstration sequences and $s$ is a sequence, the SFT stage minimizes the negative log-likelihood:
 
 $$
-\mathcal{L}_{\mathrm{SFT}}(\theta)
-= - \sum_{(x,r)} \sum_{t=1}^{T} \log \pi_\theta(r_t \mid x, r_{<t}).
+L_{\mathrm{SFT}}
+= -\frac{1}{|D_{\mathrm{demo}}|}
+\sum_{s \in D_{\mathrm{demo}}}
+\sum_{t=1}^{|s|}
+\log \pi(s_t \mid s_{<t}).
 $$
 
 
@@ -68,7 +73,25 @@ GRPO fits into the policy-gradient methods class of RL algorithms and is relativ
 
 ##### GRPO Objective
 
-Looking at the GRPO objective, there a few terms worth diving deeper into:
+Looking at the GRPO objective, there a few terms worth diving deeper into.
+
+Given a single problem $x$ and a group of completions $\{y_i\}$, the per-group objective is:
+
+$$
+J(\theta, x, y_1, \ldots, y_G)
+= \sum_{i=1}^{G} \frac{1}{|y_i|} \sum_{t=1}^{|y_i|}
+\left(
+\operatorname{clip}\!\left(
+\frac{\pi_\theta(y_{i,t} \mid x, y_{i,<t})}{
+\pi_{\theta_{\mathrm{old}}}(y_{i,t} \mid x, y_{i,<t})
+},
+A_i, \epsilon
+\right)
+- \beta \hat{D}_{\mathrm{KL}}[\pi_\theta \| \pi_{\mathrm{ref}}; x, y_{i,\le t}]
+\right).
+$$
+
+The current policy is $\pi_\theta$ and previous iteration's policy is $\pi_{\theta_{\mathrm{ref}}}$. The starting policy is $\pi_{\theta_{\mathrm{ref}}}$.
 
 - **KL divergence**: keeps the updated policy similar to the base policy such that the starting action space remains viable.
 
@@ -96,9 +119,9 @@ $$
 
 So the update depends on how much better one sampled reasoning trace is than the other samples for the same task, not just on its absolute reward.
 
-Notably, the KL divergence term tie the learned policy [within some soft divergence bounds](https://arxiv.org/abs/2504.13837) around the initial policy, with update steps weighted by the PPO-likelihood ratio (+clipping) ensuring gradual changes. Since we’re using a pre-trained LLM as a policy, there is an already baked in prior distribution over token space that is dependent on the pre-training setup used for the base model. Each base model learns a slightly different prior over world data. 
+Notably, the KL divergence term tie the learned policy [within some soft divergence bounds](https://arxiv.org/abs/2504.13837) around the initial policy $\pi_{\theta_{\mathrm{ref}}}$, with update steps weighted by the PPO-likelihood ratio (+clipping) ensuring gradual changes. Since we’re using a pre-trained LLM as a policy, there is an already baked in prior distribution over token space that is dependent on the pre-training setup used for the base model. Each base model learns a slightly different prior over world data. 
 
-How much this prior of differs between models is an open question but I’d hypothesize that the differences in the learned priors are amplified in smaller data domains like chemistry. Its very possible that chemistry data makes up a very small fraction of the training corpus of large base model with molecule data being an even smaller, miniscule fraction. As a result, differences in composition and size of this type of data in each model’s pre-training corpus can lead to differences in the learned prior around things like molecule quality and the relationship between structure and chemical property. 
+How much this prior $\pi_{\theta_{\mathrm{ref}}}$  of differs between models is an open question but I’d hypothesize that the differences in the learned priors are amplified in smaller data domains like chemistry. Its very possible that chemistry data makes up a very small fraction of the training corpus of large base model with molecule data being an even smaller, miniscule fraction. As a result, differences in composition and size of this type of data in each model’s pre-training corpus can lead to differences in the learned prior around things like molecule quality and the relationship between structure and chemical property. 
 
 With this in mind, recall that the KL divergence term keeps the learned policy similar to the reference policy. Specifically, the KL term as written in the GRPO objective contributes a high penalty if probability mass is moved away from areas it previously covered. In other words, if the reference model considers a molecule to be likely, the learned policy will be biased to continue to see that molecule as likely. 
 
@@ -129,9 +152,7 @@ $$
 
 where $q(\cdot)$ is a molecule-quality score.
 
-Andrew White has a really interesting [blog post](https://diffuse.one/p/m1-000) that dives into the development of chemistry reward functions. It's a great read and I highly recommend checking it out. 
-
-He mentions trying out domain-specific models (GNNs, classifiers) during the development process of Ether0. I wonder if future post-training pipelines will make greater use of these. 
+Andrew White has a really interesting [blog post](https://diffuse.one/p/m1-000) that dives into the development of chemistry reward functions. It's a great read and I highly recommend checking it out. He mentions trying out domain-specific models (GNNs, classifiers) during the development process of Ether0. I wonder if future post-training pipelines will make greater use of these. 
 
 ##### Addressing problematic tasks using an advantage-based curriculum
 
