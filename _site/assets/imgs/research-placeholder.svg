@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240" role="img" aria-labelledby="title desc">
+  <title id="title">Research project placeholder</title>
+  <desc id="desc">A colorful gradient placeholder image for research entries.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="45%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <radialGradient id="glowOne" cx="20%" cy="25%" r="70%">
+      <stop offset="0%" stop-color="#67e8f9" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#67e8f9" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowTwo" cx="85%" cy="20%" r="70%">
+      <stop offset="0%" stop-color="#c084fc" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#c084fc" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowThree" cx="70%" cy="85%" r="75%">
+      <stop offset="0%" stop-color="#34d399" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#34d399" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="panel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.06"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="360" height="240" rx="24" fill="url(#bg)"/>
+  <rect width="360" height="240" rx="24" fill="url(#glowOne)"/>
+  <rect width="360" height="240" rx="24" fill="url(#glowTwo)"/>
+  <rect width="360" height="240" rx="24" fill="url(#glowThree)"/>
+
+  <rect x="24" y="24" width="312" height="192" rx="18" fill="url(#panel)" stroke="#ffffff" stroke-opacity="0.2"/>
+
+  <circle cx="92" cy="86" r="28" fill="#ffffff" fill-opacity="0.18"/>
+  <path d="M58 170 L124 112 L168 148 L220 92 L302 170 Z" fill="#ffffff" fill-opacity="0.16"/>
+
+  <text x="180" y="92" text-anchor="middle" font-family="Inter, Arial, Helvetica, sans-serif" font-size="18" font-weight="600" fill="#ffffff">
+    Research Project
+  </text>
+  <text x="180" y="118" text-anchor="middle" font-family="Inter, Arial, Helvetica, sans-serif" font-size="16" fill="#dbeafe">
+    Gradient Placeholder
+  </text>
+</svg>

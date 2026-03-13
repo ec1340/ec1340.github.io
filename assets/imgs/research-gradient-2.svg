@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="240" viewBox="0 0 360 240" role="img" aria-label="Abstract gradient placeholder">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="50%" stop-color="#dbeafe"/>
+      <stop offset="100%" stop-color="#cffafe"/>
+    </linearGradient>
+    <filter id="blur2"><feGaussianBlur stdDeviation="30"/></filter>
+  </defs>
+  <rect width="360" height="240" rx="24" fill="url(#bg2)"/>
+  <circle cx="84" cy="184" r="90" fill="#22d3ee" fill-opacity="0.5" filter="url(#blur2)"/>
+  <circle cx="274" cy="66" r="72" fill="#60a5fa" fill-opacity="0.58" filter="url(#blur2)"/>
+  <circle cx="306" cy="188" r="64" fill="#93c5fd" fill-opacity="0.42" filter="url(#blur2)"/>
+  <rect x="30" y="30" width="300" height="180" rx="18" fill="#ffffff" fill-opacity="0.18" stroke="#ffffff" stroke-opacity="0.58"/>
+  <path d="M56 90 H304" stroke="#ffffff" stroke-opacity="0.5"/>
+  <path d="M56 150 H242" stroke="#ffffff" stroke-opacity="0.4"/>
+</svg>

@@ -7,6 +7,8 @@ entries:
       - title: founder building intelligence for biology @ <a href="https://ascentbio.xyz">Ascent Bio</a>
       - title: about me
         url: about
+      - title: research
+        url: research
       - title: links
         entries:
           - title: github

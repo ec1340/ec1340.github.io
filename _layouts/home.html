@@ -1,13 +1,17 @@
 ---
 layout: default
 ---
-<header>
-  <h1>{{ site.title }}</h1>
-  {%-if site.theme_config.show_description-%}
-    <p>{{ site.description }}</p>
-  {%-endif-%}
-</header>
+<div class="home-layout">
+  <header class="home-header">
+    <h1>{{ site.title }}</h1>
+    {%-if site.theme_config.show_description-%}
+      <p class="home-description">{{ site.description }}</p>
+    {%-endif-%}
+  </header>
 
-{%-include menu_item.html collection=site.data.menu.entries-%}
+  <div class="home-sections">
+    {%-include menu_item.html collection=site.data.menu.entries-%}
+  </div>
 
-{{ content }}
+  {{ content }}
+</div>
