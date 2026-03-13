@@ -120,7 +120,7 @@ $$
 So the update depends on how much better one sampled reasoning trace is than the other samples for the same task, not just on its absolute reward.
 
 
-### Constrained to a Weak Prior?
+#### Are Molecule Reasoning Models Constrained by a Weak Prior?
 
 Notably, the KL divergence term tie the learned policy [within some soft divergence bounds](https://arxiv.org/abs/2504.13837) around the initial policy $\pi_{\theta_{\mathrm{ref}}}$, with update steps weighted by the PPO-likelihood ratio (+clipping) ensuring gradual changes. Since we’re using a pre-trained LLM as a policy, there is an already baked in prior distribution over token space that is dependent on the pre-training setup used for the base model. Each base model learns a slightly different prior over world data. 
 
