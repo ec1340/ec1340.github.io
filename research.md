@@ -17,7 +17,7 @@ Newest work appears first.
 <table class="research-entry">
   <tr>
     <td width="150" valign="top">
-      <img src="{{ '/assets/imgs/research-gradient-1.svg' | relative_url }}" alt="Abstract gradient image for the CellSpliceNet project" width="130" />
+      <img src="{{ '/assets/imgs/cellsplicenet.png' | relative_url }}" alt="Abstract gradient image for the CellSpliceNet project" width="130" />
     </td>
     <td valign="top">
       <span class="research-entry-title">2025 · CellSpliceNet: interpretable multimodal modeling of alternative splicing across neurons</span>
@@ -31,7 +31,7 @@ Newest work appears first.
 <table class="research-entry">
   <tr>
     <td width="150" valign="top">
-      <img src="{{ '/assets/imgs/research-gradient-2.svg' | relative_url }}" alt="Abstract gradient image for the ProtSCAPE project" width="130" />
+      <img src="{{ '/assets/imgs/protscape.png' | relative_url }}" alt="Abstract gradient image for the ProtSCAPE project" width="130" />
     </td>
     <td valign="top">
       <span class="research-entry-title">2024 · ProtSCAPE: mapping the landscape of protein conformations in molecular dynamics</span>
@@ -46,7 +46,7 @@ Newest work appears first.
 <table class="research-entry">
   <tr>
     <td width="150" valign="top">
-      <img src="{{ '/assets/imgs/research-gradient-3.svg' | relative_url }}" alt="Abstract gradient image for the dissertation project" width="130" />
+      <img src="{{ '/assets/imgs/dissertation.png' | relative_url }}" alt="Abstract gradient image for the dissertation project" width="130" />
     </td>
     <td valign="top">
       <span class="research-entry-title">2023 · Representation learning and generative modeling for biomolecular sequences and structures</span>
@@ -59,7 +59,7 @@ Newest work appears first.
 <table class="research-entry">
   <tr>
     <td width="150" valign="top">
-      <img src="{{ '/assets/imgs/research-gradient-4.svg' | relative_url }}" alt="Abstract gradient image for the protein optimization project" width="130" />
+      <img src="{{ '/assets/imgs/relso.png' | relative_url }}" alt="Abstract gradient image for the protein optimization project" width="130" />
     </td>
     <td valign="top">
       <span class="research-entry-title">2022 · Transformer-based protein generation with regularized latent-space optimization</span>
@@ -74,7 +74,7 @@ Newest work appears first.
 <table class="research-entry">
   <tr>
     <td width="150" valign="top">
-      <img src="{{ '/assets/imgs/research-gradient-5.svg' | relative_url }}" alt="Abstract gradient image for the molecular graph generation project" width="130" />
+      <img src="{{ '/assets/imgs/grassy.png' | relative_url }}" alt="Abstract gradient image for the molecular graph generation project" width="130" />
     </td>
     <td valign="top">
       <span class="research-entry-title">2022 · Molecular graph generation via geometric scattering</span>
@@ -88,7 +88,7 @@ Newest work appears first.
 <table class="research-entry">
   <tr>
     <td width="150" valign="top">
-      <img src="{{ '/assets/imgs/research-gradient-6.svg' | relative_url }}" alt="Abstract gradient image for the clinical transfusion prediction project" width="130" />
+      <img src="{{ '/assets/imgs/ehr.png' | relative_url }}" alt="Abstract gradient image for the clinical transfusion prediction project" width="130" />
     </td>
     <td valign="top">
       <span class="research-entry-title">2021 · Predicting transfusion need in acute GI bleeding</span>
