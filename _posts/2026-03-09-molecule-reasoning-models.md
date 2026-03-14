@@ -7,9 +7,13 @@ category: ml
 ---
 
 
-I’ve been thinking a lot about molecule design lately, and in particular about whether LLMs could ever get genuinely good at reasoning through it. A paper that is a great example of current approaches and a nice starting point is [Ether0](https://github.com/Future-House/ether0).
+I’ve been thinking a lot about science reasoning models lately, and in particular about whether LLMs could ever get genuinely good at reasoning through difficult biological research. There has been exciting progress in domains like math and coding, but science has not yet experienced the anticipated tipping point. 
 
-In this post, I'll be walking through how [Ether0](https://github.com/Future-House/ether0) used post-training techniques like SFT and GRPO to instill molecule reasoning into base LLMs. I'll also dig into a few key ideas in the training setup. 
+
+There has been a recent expansion of work in LLM post-training that has resulted in a clean framework for developing specialized reasoning models. Drawing from earlier work, [DeepSeek-R1](https://arxiv.org/abs/2501.12948) demonstrated that a simple post-training setup can elicit impressive reasoning abilities in a base model. 
+
+
+A paper that is a great example how this can transfer to the science domain is  [Ether0](https://github.com/Future-House/ether0). In this post, I'll be walking through how [Ether0](https://github.com/Future-House/ether0) used post-training techniques like SFT and GRPO to instill molecule reasoning into base LLMs. I'll also dig into a few key ideas in the training setup. 
 
 There’s been a lot of interest in the AI for science field around specialized reasoning models with most showing very early progress. They often still fail in many obvious ways and I think the Ether0 paper is a useful place to ask what the path to get to a strong model might look like.
 
@@ -114,7 +118,7 @@ GRPO then uses group-normalized rewards. If we sample $G$ outputs for the same p
 $$
 A_i
 = \frac{r_i - \mathrm{mean}(r_1,\dots,r_G)}
-{\mathrm{std}(r_1,\dots,r_G) + \varepsilon}.
+{\mathrm{std}(r_1,\dots,r_G)}.
 $$
 
 So the update depends on how much better one sampled reasoning trace is than the other samples for the same task, not just on its absolute reward.
@@ -122,7 +126,7 @@ So the update depends on how much better one sampled reasoning trace is than the
 
 #### Are Molecule Reasoning Models Constrained by a Weak Prior?
 
-Notably, the KL divergence term tie the learned policy [within some soft divergence bounds](https://arxiv.org/abs/2504.13837) around the initial policy $\pi_{\theta_{\mathrm{ref}}}$, with update steps weighted by the PPO-likelihood ratio (+clipping) ensuring gradual changes. Since we’re using a pre-trained LLM as a policy, there is an already baked in prior distribution over token space that is dependent on the pre-training setup used for the base model. Each base model learns a slightly different prior over world data. 
+Notably, the training dynamics of GRPO tie the learned policy [within some soft divergence bounds](https://arxiv.org/abs/2504.13837) around the initial policy $\pi_{\theta_{\mathrm{ref}}}$, with update steps weighted by the PPO-likelihood ratio (+clipping) ensuring gradual changes. Since we’re using a pre-trained LLM as a policy, there is an already baked in prior distribution over token space that is dependent on the pre-training setup used for the base model. Each base model learns a slightly different prior over world data. 
 
 How much this prior $\pi_{\theta_{\mathrm{ref}}}$  of differs between models is an open question but I’d hypothesize that the differences in the learned priors are amplified in smaller data domains like chemistry. Its very possible that chemistry data makes up a very small fraction of the training corpus of large base model with molecule data being an even smaller, miniscule fraction. As a result, differences in composition and size of this type of data in each model’s pre-training corpus can lead to differences in the learned prior around things like molecule quality and the relationship between structure and chemical property. 
 
@@ -186,6 +190,4 @@ While agentic harnesses confer immediate gains in problem solving capabilities, 
 
 For tasks concerning molecules, a core challenge is searching through an enormous design space, with many constraints and multi-scale interactions. With an agentic system, the search process feels very familiar. Agents iteratively loop through reasoning steps and tool calls to generate and check molecule designs. But efficiently navigating through this highly-complex search space can perhaps be done in a better way if the underlying search model possess a level of a deep generalizable knowledge of molecules. With enough inference-time compute, molecule reasoning models may generate novel, high-quality molecules with chemically grounded rationale. 
 
-
 ---
-
