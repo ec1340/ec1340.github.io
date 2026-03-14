@@ -1,0 +1,224 @@
+%-------------------------
+% General Academic CV
+%------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{microtype}
+\usepackage{charter}
+\usepackage[T1]{fontenc}
+\usepackage{xcolor}
+
+\definecolor{rulegray}{gray}{0.80}
+\definecolor{textgray}{gray}{0.12}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\footskip}{12pt}
+
+% Margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{0in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.55in}
+\addtolength{\textheight}{1.1in}
+
+\urlstyle{same}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Clean academic section styling
+\titleformat{\section}{
+    \large\bfseries\scshape\raggedright
+}{}{0em}{}[\color{rulegray}\titlerule\vspace{-3pt}]
+
+\pdfgentounicode=1
+\color{textgray}
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-1pt}\item
+    \begin{tabular*}{\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & {\small #2}\vspace{1pt}\\
+      \textit{#3} & {\small #4}\\
+    \end{tabular*}\vspace{-4pt}
+}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0in, label={}, itemsep=6pt, topsep=3pt]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}[leftmargin=0.18in, itemsep=2pt, topsep=2pt]}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-2pt}}
+\newcommand{\resumeItem}[1]{\item\small{{#1 \vspace{-1pt}}}}
+
+%-------------------------------------------
+\begin{document}
+
+\begin{center}
+    {\LARGE \textbf{Egbert Castro, PhD}} \\ \vspace{6pt}
+    \small
+    \href{https://egbertcastro.com}{egbertcastro.com}
+    \hspace{5pt}$\cdot$\hspace{5pt}
+    \href{mailto:egbcastro@gmail.com}{egbcastro@gmail.com}
+    \hspace{5pt}$\cdot$\hspace{5pt}
+    \href{https://www.linkedin.com/in/castroegbert}{linkedin.com/in/castroegbert}
+    \hspace{5pt}$\cdot$\hspace{5pt}
+    \href{https://github.com/egbert}{github.com/egbert}
+    \hspace{5pt}$\cdot$\hspace{5pt}
+    Los Angeles, CA
+\end{center}
+
+\section{Research Interests}
+{\small
+Machine learning for biology and scientific discovery; generative modeling for proteins and molecules; representation learning for structured biological data; latent-space optimization and controllable generation; graph neural networks and geometric deep learning.
+}
+
+\section{Education}
+\resumeSubHeadingListStart
+  \resumeSubheading
+    {Yale University}{New Haven, CT}
+    {PhD, Computational Biology \& Bioinformatics}{2018 -- 2023}
+    \resumeItemListStart
+      \resumeItem{Advisor: Prof.\ Smita Krishnaswamy}
+      \resumeItem{Dissertation: \textit{Representation Learning and Generative Modeling for Biomolecular Sequences and Structures}}
+    \resumeItemListEnd
+
+  \resumeSubheading
+    {University of California, San Diego}{La Jolla, CA}
+    {BS, Pharmacological Chemistry; Minor in Mathematics}{2014 -- 2018}
+\resumeSubHeadingListEnd
+
+\section{Teaching Experience}
+\resumeSubHeadingListStart
+  \resumeSubheading
+    {Yale University}{New Haven, CT}
+    {Teaching Assistant}{}
+    \resumeItemListStart
+      \resumeItem{\textbf{CPSC 4520b, Deep Learning Theory and Applications} (Instructor: Dr.\ Smita Krishnaswamy). Supported a course covering the principles and practice of neural networks and modern deep learning, with applications in computer vision, natural language processing, and biomedical problems.}
+      \resumeItem{\textbf{MCDB 570, Biotechnology} (Instructor: Dr.\ Craig Crews). Supported instruction on cellular, molecular, and chemical techniques in biotechnology, including applications to therapeutics, industrial agents, and biological research.}
+    \resumeItemListEnd
+\resumeSubHeadingListEnd
+
+\section{Research and Professional Experience}
+\resumeSubHeadingListStart
+  \resumeSubheading
+    {Ascent Bio}{Hybrid - Los Angeles, CA and New York, NY}
+    {Co-founder, AI Research}{2023 -- Present}
+    \resumeItemListStart
+      \resumeItem{Led the zero-to-one effort to build a VC-backed agentic science platform, from research to production.}
+      \resumeItem{Accepted into the Merck Digital Sciences Accelerator and IndieBio NYC Accelerator.}
+      \resumeItem{Designed and built agentic systems for scientific and drug-discovery workflows that combined foundation models, scientific tools, and code execution across multi-step research tasks.}
+      \resumeItem{Developed evaluation frameworks for correctness, tool-use reliability, and failure-mode analysis on realistic scientific problems.}
+      \resumeItem{Contributed to molecule reasoning-model research using synthetic data generation, reproducible experimentation, and rapid iteration in a shared research codebase.}
+    \resumeItemListEnd
+
+  \resumeSubheading
+    {Yale University -- Krishnaswamy Lab}{New Haven, CT}
+    {Graduate Researcher, Computational Biology \& Bioinformatics}{2018 -- 2023}
+    \resumeItemListStart
+      \resumeItem{Conducted research in geometric deep learning and generative modeling for biological sequences, structures, and graphs, with applications spanning proteins, RNA, molecular graphs, and clinical prediction.}
+      \resumeItem{Developed transformer-based protein generative models with regularized latent-space optimization for gradient-guided search in learned sequence representations; first-author work published in \textit{Nature Machine Intelligence}.}
+      \resumeItem{Designed representation-learning methods for RNA secondary-structure landscapes and molecular graph generation, integrating graph-based architectures, geometric scattering, and task-specific biological objectives.}
+      \resumeItem{Established reproducible multi-GPU training pipelines, curated benchmark datasets, and defined biologically grounded evaluation protocols for comparative analysis of biomolecular machine-learning methods.}
+    \resumeItemListEnd
+
+  \resumeSubheading
+    {Genentech}{South San Francisco, CA}
+    {Machine Learning Research Intern, Discovery Chemistry}{Summer 2018}
+    \resumeItemListStart
+      \resumeItem{Developed predictive models for ADMET properties on internal compound libraries using deep neural networks.}
+      \resumeItem{Built automated machine-learning pipelines integrating RDKit-based featurization with model training and evaluation.}
+      \resumeItem{Partnered with discovery scientists on model evaluation for medicinal chemistry use cases.}
+    \resumeItemListEnd
+\resumeSubHeadingListEnd
+
+\section{Publications}
+{\small \textit{$\dagger$ denotes first author.}}
+\vspace{4pt}
+
+{\small
+\textbf{Peer-Reviewed Journal Articles and Conference Papers}
+\begin{itemize}[leftmargin=0.18in, itemsep=5pt, topsep=2pt]
+  \item[$\dagger$] \textbf{Castro, E.}, Godavarthi, A., Rubinfien, J., Givechian, K., Bhaskar, D., Krishnaswamy, S.
+  \textit{Transformer-based protein generation with regularized latent space optimization}.
+  \textbf{Nature Machine Intelligence}, 4(10):840--851, 2022.
+
+  \item Bhaskar, D., Grady, J., \textbf{Castro, E.}, Perlmutter, M., Krishnaswamy, S.
+  \textit{Molecular graph generation via geometric scattering}.
+  2022 IEEE 32nd International Workshop on Machine Learning for Signal Processing (MLSP), 1--6, 2022.
+
+  \item Shung, D., Huang, J., \textbf{Castro, E.}, Tay, J.K., Simonov, M., Laine, L., Batra, R., Krishnaswamy, S.
+  \textit{Neural network predicts need for red blood cell transfusion for patients with acute gastrointestinal bleeding admitted to the intensive care unit}.
+  \textbf{Scientific Reports}, 11(1):8827, 2021.
+
+  \item[$\dagger$] \textbf{Castro, E.}, Benz, A., Tong, A., Wolf, G., Krishnaswamy, S.
+  \textit{Uncovering the folding landscape of RNA secondary structure using deep graph embeddings}.
+  2020 IEEE International Conference on Big Data (Big Data), 4519--4528, 2020.
+
+  \item Tew, B.Y., Hong, T.B., Otto-Duessel, M., Elix, C., \textbf{Castro, E.}, He, M., Wu, X., Pal, S.K., Kalkum, M., Jones, J.O.
+  \textit{Vitamin K epoxide reductase regulation of androgen receptor activity}.
+  \textbf{Oncotarget}, 8(8):13818--13831, 2017.
+\end{itemize}
+
+\vspace{4pt}
+\textbf{Patent Applications}
+\begin{itemize}[leftmargin=0.18in, itemsep=5pt, topsep=2pt]
+  \item[$\dagger$] \textbf{Castro, E.}, Krishnaswamy, S., Godavarthi, A., Rubinfien, J.
+  \textit{Regularized deep learning based improvement of biomolecules}.
+  US Patent Application 18/061,272, published September 14, 2023.
+\end{itemize}
+
+\vspace{4pt}
+\textbf{Preprints}
+\begin{itemize}[leftmargin=0.18in, itemsep=5pt, topsep=2pt]
+  \item Afrasiyabi, A., Kovalic, J., Liu, C., \textbf{Castro, E.}, Weinreb, A., Varol, E., Miller III, D.M., Hammarlund, M., Krishnaswamy, S.
+  \textit{CellSpliceNet: Interpretable multimodal modeling of alternative splicing across neurons in C.\ elegans}.
+  \textbf{bioRxiv}, 2025.06.22.660966, 2025.
+
+  \item Viswanath, S., Bhaskar, D., Johnson, D.R., Rocha, J.F., \textbf{Castro, E.}, Grady, J.D., Grigas, A.T., Perlmutter, M.A., O'Hern, C.S., Krishnaswamy, S.
+  \textit{ProtSCAPE: Mapping the landscape of protein conformations in molecular dynamics}.
+  arXiv preprint arXiv:2410.20317, 2024.
+\end{itemize}
+
+\vspace{4pt}
+\textbf{Conference Abstracts}
+\begin{itemize}[leftmargin=0.18in, itemsep=5pt, topsep=2pt]
+  \item[$\dagger$] \textbf{Castro, E.}, Shung, D.
+  \textit{993 NEURAL NETWORK PREDICTS DROP IN HEMOGLOBIN REQUIRING TRANSFUSION FOR PATIENTS WITH ACUTE GASTROINTESTINAL BLEEDING ADMITTED TO THE ICU}.
+  \textbf{Gastroenterology}, 158(6):S-196--S-197, 2020.
+\end{itemize}
+}
+
+\section{Presentations \& Talks}
+{\small
+\begin{itemize}[leftmargin=0.18in, itemsep=4pt, topsep=2pt]
+  \item \textbf{ProtSCAPE: Mapping the landscape of protein conformations in molecular dynamics}. SMT Conference, 2025.
+  \item \textbf{ProGSNN}. Presented at the Learning Meaningful Representations of Life Workshop at ICLR, 2021, and at the NLM Training Grant Conference, 2022.
+  \item \textbf{Molecular graph generation via geometric scattering}. IEEE International Workshop on Machine Learning for Signal Processing, 2022.
+  \item \textbf{Guided Generative Protein Design using Regularized Transformers}. ISMB/ECCB, 2021.
+  \item \textbf{Uncovering the Folding Landscape of RNA Secondary Structure with Deep Graph Embeddings}. Presented at the GRLB Workshop at ICML and at the IEEE International Conference on Big Data, 2020.
+\end{itemize}
+}
+
+\section{Technical Skills}
+\vspace{2pt}
+{\small
+\begin{tabularx}{\textwidth}{@{}>{\bfseries}l @{\hspace{12pt}} X@{}}
+Methods & transformers, generative models, latent-space optimization, representation learning, sequence modeling, graph neural networks, geometric deep learning \\
+Domains & protein sequence modeling, molecular property prediction, RNA structure, multimodal biological data, AI for scientific discovery \\
+Tools & Python, PyTorch, JAX, Hugging Face, scikit-learn, RDKit, Weights and Biases, multi-GPU training, benchmarking, reproducible experimentation \\
+\end{tabularx}
+}
+
+\end{document}

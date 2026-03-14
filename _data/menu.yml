@@ -9,6 +9,10 @@ entries:
         url: about
       - title: research
         url: research
+      - title: instruction
+        url: instruction
+      - title: cv
+        url: cv
       - title: links
         entries:
           - title: github
