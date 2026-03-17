@@ -9,7 +9,7 @@ I love building and learning. I'm currently building the future of molecule inte
 
 ### A Little About Me
 
-I work on post-training and agentic systems for language models, with a focus on reasoning, tool use, and reward engineering in scientific domains.
+I work on post-training and agentic systems, with a focus on reasoning, tool use, and reward engineering in scientific domains.
 
 Currently, I’m the co-founder of Ascent Bio, a startup that integrates LLM agents with computational chemistry and biology tools to accelerate molecular design workflows.
 
